@@ -31,30 +31,33 @@ import Todo from "./Todo.vue";
 import CreateTodo from "./CreateTodo.vue";
 
 export default {
-  props: {
-    listName: String,
-  },
   data() {
     return {
-      todos: [
-        { description: "Do the dishes", completed: false },
-        { description: "Take out the trash", completed: false },
-        { description: "Finish doing laundry", completed: false },
-      ],
+      todos: {
+        type: Object
+      },
+      listName: this.$store.state.listName
     };
+  },
+  mounted(){
+    this.todos = this.$localStorage.get('todosList');      
   },
   methods: {
     addTodo(newTodo) {
       this.todos.push({ description: newTodo, completed: false });
+      this.$localStorage.set('todosList', this.todos);
     },
     toggleTodo(todo) {
       todo.completed = !todo.completed;
+      this.$localStorage.set('todosList', this.todos);
     },
     deleteTodo(deletedTodo) {
       this.todos = this.todos.filter(todo => todo !== deletedTodo);
+      this.$localStorage.set('todosList', this.todos);
     },
     editTodo(todo, newTodoDescription) {
       todo.description = newTodoDescription;
+      this.$localStorage.set('todosList', this.todos);
     },
   },
   components: { Todo, CreateTodo },
@@ -62,3 +65,4 @@ export default {
 </script>
 
 <style scoped lang="scss"></style>
+
